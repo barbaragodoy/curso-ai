@@ -1,15 +1,15 @@
+# ========================================
+# LISTA 14 - Exercício de Cálculo de Idade em Dias
+# Objetivo: Converter idade em anos, meses e dias para total de dias
+# ========================================
 
-salario_atual = 3000.00  
-percentual_aumento = 0.10 
+# Leitura da idade em anos, meses e dias
+anos = int(input("Digite a quantidade de anos: "))
+meses = int(input("Digite a quantidade de meses: "))
+dias = int(input("Digite a quantidade de dias: "))
 
+# Calcula o total de dias (aproximado: 1 ano = 365 dias, 1 mês = 30 dias)
+total_dias = (anos * 365) + (meses * 30) + dias
 
-valor_aumento = salario_atual * percentual_aumento
-
-
-novo_salario = salario_atual + valor_aumento
-
-
-print(f"Salário atual: R$ {salario_atual:.2f}")
-print(f"Percentual de aumento: {percentual_aumento*100}%")
-print(f"Valor do aumento: R$ {valor_aumento:.2f}")
-print(f"Novo salário: R$ {novo_salario:.2f}")
+# Exibe o resultado total em dias
+print(f"A idade total em dias é: {total_dias} dias")

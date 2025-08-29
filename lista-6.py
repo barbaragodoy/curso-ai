@@ -1,5 +1,11 @@
-numero1 = float(input("insira o valor 1: "))
-numero2 = float(input("insira o valor 2: "))
-numero3 = float(input("insira o valor 3: "))
+# ========================================
+# LISTA 6 - Exercício de Multiplicação
+# Objetivo: Receber dois valores e calcular o produto
+# ========================================
 
-print ((numero1 + numero2 + numero3)/3)
+# Recebe dois valores inteiros do usuário
+numero1 = int(input("insira o valor 1: "))
+numero2 = int(input("insira o valor 2: "))
+
+# Calcula e exibe o produto dos dois valores
+print (numero1 * numero2)

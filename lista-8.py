@@ -1,3 +1,11 @@
-numero1 = float(input("insira o valor : "))
+# ========================================
+# LISTA 8 - Exercício de Resto da Divisão
+# Objetivo: Receber dois valores e calcular o resto da divisão
+# ========================================
 
-print ((numero1**2) * 3.14)
+# Recebe dois valores inteiros do usuário
+numero1 = int(input("insira o valor 1: "))
+numero2 = int(input("insira o valor 2: "))
+
+# Calcula e exibe o resto da divisão entre os valores
+print (numero1 % numero2)

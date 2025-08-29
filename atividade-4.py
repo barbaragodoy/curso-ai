@@ -1,6 +1,16 @@
-nota1 = float(input("Insira a nota: "))
-nota2 = float(input("Insira a nota: "))
+# ========================================
+# ATIVIDADE 4 - Quarta Atividade do Curso
+# Objetivo: Cálculo da soma de quatro números
+# ========================================
 
-resultado = ((nota1 * 0.7) + (nota2 * 0.3) ) / 1
+# Recebe quatro números inteiros do usuário
+n1 = int(input("Informe o 1º número: "))
+n2 = int(input("Informe o 2º número: "))
+n3 = int(input("Informe o 3º número: "))
+n4 = int(input("Informe o 4º número: "))
 
-print ("Sua nota é: " , resultado)
+# Calcula a soma dos quatro números
+resultado = n1 + n2 + n3 + n4
+
+# Exibe o resultado da soma
+print ("A soma dos números é: " , resultado)

@@ -1,6 +1,12 @@
-base = float(input("insira o valor da base: "))
-altura = float(input("insira o valor da altura: "))
+# ========================================
+# LISTA 11 - Exercício de Média Aritmética
+# Objetivo: Receber três valores e calcular a média
+# ========================================
 
-area = base * altura
+# Recebe três valores decimais do usuário
+numero1 = float(input("insira o valor 1: "))
+numero2 = float(input("insira o valor 2: "))
+numero3 = float(input("insira o valor 3: "))
 
-print (area)
+# Calcula e exibe a média aritmética dos três valores
+print ((numero1 + numero2 + numero3) / 3)

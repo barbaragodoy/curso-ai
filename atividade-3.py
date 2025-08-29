@@ -1,8 +1,10 @@
-n1 = int(input("Informe o 1º número: "))
-n2 = int(input("Informe o 2º número: "))
-n3 = int(input("Informe o 3º número: "))
-n4 = int(input("Informe o 4º número: "))
+# ========================================
+# ATIVIDADE 3 - Terceira Atividade do Curso
+# Objetivo: Cálculo da terça parte de um número
+# ========================================
 
-resultado = n1 + n2 + n3 + n4
+# Recebe um número decimal do usuário
+numero = float(input("Digite o número: "))
 
-print ("A soma dos números é: " , resultado)
+# Calcula e exibe a terça parte do número (divisão por 3)
+print ("A terça parte de " , numero, "é" , numero / 3)

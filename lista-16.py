@@ -1,14 +1,20 @@
-comprimento = 10.5  
-largura = 5.2      
+# ========================================
+# LISTA 16 - Exercício de Cálculo de Salário com Aumento
+# Objetivo: Calcular novo salário após aumento percentual
+# ========================================
 
+# Define o salário atual e o percentual de aumento
+salario_atual = 3000.00  
+percentual_aumento = 0.10 
 
-area = comprimento * largura
+# Calcula o valor do aumento
+valor_aumento = salario_atual * percentual_aumento
 
+# Calcula o novo salário somando o aumento
+novo_salario = salario_atual + valor_aumento
 
-perimetro = 2 * (comprimento + largura)
-
-
-print(f"O comprimento do retângulo é: {comprimento}")
-print(f"A largura do retângulo é: {largura}")
-print(f"A área do retângulo é: {area}")
-print(f"O perímetro do retângulo é: {perimetro}")
+# Exibe todos os valores calculados
+print(f"Salário atual: R$ {salario_atual:.2f}")
+print(f"Percentual de aumento: {percentual_aumento*100}%")
+print(f"Valor do aumento: R$ {valor_aumento:.2f}")
+print(f"Novo salário: R$ {novo_salario:.2f}")

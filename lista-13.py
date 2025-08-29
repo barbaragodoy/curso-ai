@@ -1,10 +1,13 @@
-# Leitura da idade em anos, meses e dias
-anos = int(input("Digite a quantidade de anos: "))
-meses = int(input("Digite a quantidade de meses: "))
-dias = int(input("Digite a quantidade de dias: "))
+# ========================================
+# LISTA 13 - Exercício de Conversão de Temperatura
+# Objetivo: Converter temperatura de Fahrenheit para Celsius
+# ========================================
 
+# Recebe a temperatura em Fahrenheit
+fahrenheit = float(input("insira a temperatura: "))
 
-total_dias = (anos * 365) + (meses * 30) + dias
+# Converte para Celsius usando a fórmula: C = 5/9 × (F - 32)
+c = 5/9 * (fahrenheit - 32)
 
-
-print(f"A idade total em dias é: {total_dias} dias")
+# Exibe a temperatura convertida para Celsius
+print (c)

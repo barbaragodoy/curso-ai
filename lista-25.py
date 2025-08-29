@@ -1,13 +1,15 @@
+# ========================================
+# LISTA 25 - Exercício de Média Ponderada
+# Objetivo: Calcular média ponderada de três notas com pesos diferentes
+# ========================================
 
-numero = int(input("Digite um número de 3 dígitos: "))
+# Recebe as três notas do usuário
+nota1 = float(input("Insira a nota 1: "))
+nota2 = float(input("Insira a nota 2: "))
+nota3 = float(input("Insira a nota 3: "))
 
+# Calcula a média ponderada: (nota1×2 + nota2×3 + nota3×5) / 10
+resultado = ((nota1 * 2) + (nota2 * 3) + (nota3 * 5)) / 10
 
-centena = numero // 100
-dezena  = (numero // 10) % 10
-unidade = numero % 10
-
-
-invertido = unidade * 100 + dezena * 10 + centena
-
-
-print("Número invertido:", invertido)
+# Exibe o resultado da média ponderada
+print ("Sua nota é: " , resultado)

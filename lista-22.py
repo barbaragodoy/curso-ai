@@ -1,18 +1,16 @@
+# ========================================
+# LISTA 22 - Exercício de Cálculo de Área do Círculo
+# Objetivo: Calcular a área de um círculo dado o raio
+# ========================================
 
+# Recebe o raio do círculo
+raio = float(input("Digite o raio do círculo: "))
 
-num_carros_vendidos = int(input("Digite o número de carros vendidos: "))
-valor_total_vendas = float(input("Digite o valor total das vendas: "))
-salario_fixo = float(input("Digite o salário fixo: "))
-comissao_por_carro = float(input("Digite o valor da comissão por carro vendido: "))
+# Define o valor de pi (aproximação)
+pi = 3.14159
 
+# Calcula a área do círculo usando a fórmula: A = π × r²
+area = pi * (raio ** 2)
 
-comissao_carros = num_carros_vendidos * comissao_por_carro
-
-
-comissao_vendas = valor_total_vendas * 0.05
-
-
-salario_final = salario_fixo + comissao_carros + comissao_vendas
-
-
-print(f"O salário final do vendedor é R$: {salario_final:.2f}")
+# Exibe o resultado da área
+print(f"A área do círculo é: {area:.2f}")

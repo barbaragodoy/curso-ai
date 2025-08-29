@@ -1,14 +1,20 @@
+# ========================================
+# LISTA 17 - Exercício de Área e Perímetro do Retângulo
+# Objetivo: Calcular área e perímetro de um retângulo
+# ========================================
 
+# Define as dimensões do retângulo
+comprimento = 10.5  
+largura = 5.2      
 
-salario_atual = 3000
-percentual_aumento = 0.10 # 10% de aumento (10/100 = 0.10)
+# Calcula a área do retângulo (comprimento × largura)
+area = comprimento * largura
 
+# Calcula o perímetro do retângulo (2 × (comprimento + largura))
+perimetro = 2 * (comprimento + largura)
 
-valor_aumento = salario_atual * percentual_aumento
-
-
-novo_salario = salario_atual + valor_aumento
-
-
-
-print(f"Novo salário: R$ {novo_salario:.2f}")
+# Exibe todas as informações calculadas
+print(f"O comprimento do retângulo é: {comprimento}")
+print(f"A largura do retângulo é: {largura}")
+print(f"A área do retângulo é: {area}")
+print(f"O perímetro do retângulo é: {perimetro}")

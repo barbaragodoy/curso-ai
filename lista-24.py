@@ -1,7 +1,17 @@
-nota1 = float(input("Insira a nota 1: "))
-nota2 = float(input("Insira a nota 2: "))
-nota3 = float(input("Insira a nota 3: "))
+# ========================================
+# LISTA 24 - Exercício de Troca de Valores
+# Objetivo: Trocar os valores de duas variáveis usando variável temporária
+# ========================================
 
-resultado = ((nota1 * 2) + (nota2 * 3) + (nota3 * 5)) / 10
+# Define os valores iniciais das variáveis
+A = 10
+B = 20
 
-print ("Sua nota é: " , resultado)
+# Realiza a troca usando uma variável temporária
+temp = A   # Guarda o valor de A temporariamente
+A = B      # A recebe o valor de B
+B = temp   # B recebe o valor que estava em A
+
+# Exibe os valores finais após a troca
+print("O valor final de A é:", A)
+print("O valor final de B é:", B)
