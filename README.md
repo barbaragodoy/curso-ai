@@ -37,13 +37,47 @@ Este repositório contém minha jornada de aprendizado em **Inteligência Artifi
 
 ```
 curso-ai/
-├── 📂 logica-programação/
-│   ├── 🐍 lista-1.py até lista-26.py
-│   ├── 🎯 atividade-1.py até atividade-5.py
-│   ├── 📚 aula.py
-│   └── 📊 Dados print.py
-└── 📖 README.md
+├── 01-lista-introducao/              # primeiros passos, entrada/saída e variáveis
+├── 02-lista-estruturas-sequenciais/  # operadores matemáticos e fluxo linear
+├── 03-lista-condicionais/            # if/elif/else e tomadas de decisão
+├── 04-lista-repeticoes/              # laços while/for e contadores
+├── 05-lista-vetores/                 # listas, vetores e manipulação de coleções
+├── 06-lista-matrizes/                # matrizes, percursos bidimensionais
+├── 07-lista-funcoes/                 # modularização e funções reutilizáveis
+├── revisao01_n1/                     # revisão para primeira avaliação
+├── revisao02_n1/                     # simulados extras da primeira avaliação
+├── revisao01_n2/                     # revisão estendida para N2
+├── LICENSE
+└── README.md
 ```
+
+---
+
+## 🗺️ Jornada Python Básico
+
+1. **Início Curioso (`01-lista-introducao`)**  
+   Operações com números, entrada/saída e a primeira visão do interpretador.
+
+2. **Fluxo Sequencial (`02-lista-estruturas-sequenciais`)**  
+   Cálculos, conversões e scripts lineares para ganhar confiança em lógica.
+
+3. **Decisões Inteligentes (`03-lista-condicionais`)**  
+   Estruturas condicionais para reagir diferentes cenários e validar dados.
+
+4. **Rotinas Automatizadas (`04-lista-repeticoes`)**  
+   While e for resolvendo problemas iterativos, contadores e acumuladores.
+
+5. **Coleções Lineares (`05-lista-vetores`)**  
+   Manipulação de listas, estatísticas simples e filtragens.
+
+6. **Espaços Bidimensionais (`06-lista-matrizes`)**  
+   Matrizes para representar tabelas, mapas e jogos com leitura organizada.
+
+7. **Pensamento Modular (`07-lista-funcoes`)**  
+   Criação de funções, reutilização de código e testes focados em responsabilidades.
+
+8. **Revisões Guiadas (`revisao01_n1`, `revisao02_n1`, `revisao01_n2`)**  
+   Listas de revisão com exercícios mistos simulando avaliações reais.
 
 ---
 
@@ -61,21 +95,19 @@ curso-ai/
 
 ## 📚 Conteúdo das Listas
 
-### 🔢 Listas de Exercícios (1-26)
-Exercícios progressivos de lógica de programação:
+### 🔢 Módulos Principais
+- **`01-lista-introducao`**: exercícios com input/output, tipos numéricos e operadores básicos.  
+- **`02-lista-estruturas-sequenciais`**: problemas sequenciais, cálculo de médias, formatações.  
+- **`03-lista-condicionais`**: tomadas de decisão, validação de faixas, classificação de dados.  
+- **`04-lista-repeticoes`**: repetição com while/for, tabuada, contagem e agregações.  
+- **`05-lista-vetores`**: listas, filtros, buscas lineares e ordenação manual.  
+- **`06-lista-matrizes`**: leitura matricial, somatórios por linha/coluna e varredura 2D.  
+- **`07-lista-funcoes`**: modularização, funções puras e reutilização de lógica.
 
-- **Listas 1-10**: Conceitos básicos de variáveis, entrada/saída
-- **Listas 11-20**: Estruturas condicionais e loops
-- **Listas 21-26**: Funções e estruturas de dados
-
-### 🎯 Atividades Práticas (1-5)
-Projetos mais complexos que aplicam os conceitos aprendidos:
-
-- **Atividade 1**: Primeiros passos com Python
-- **Atividade 2**: Manipulação de dados
-- **Atividade 3**: Estruturas de controle
-- **Atividade 4**: Funções e modularização
-- **Atividade 5**: Projeto integrador
+### 🎯 Trilhas de Revisão
+- **`revisao01_n1`**: resumo dos tópicos das listas 01 a 04.  
+- **`revisao02_n1`**: lista extra simulando a prova N1 completa.  
+- **`revisao01_n2`**: revisão acumulada incluindo vetores, matrizes e funções.
 
 ---
 
@@ -95,7 +127,7 @@ git clone https://github.com/seu-usuario/curso-ai.git
 cd curso-ai
 
 # Execute qualquer arquivo Python
-python3 logica-programação/lista-4.py
+python 04-lista-repeticoes/programa1.py
 ```
 
 <div align="center">
@@ -182,4 +214,4 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ---
 
-*Última atualização: Agosto 2025*
+*Última atualização: Novembro 2025*
