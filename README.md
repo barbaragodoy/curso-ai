@@ -37,23 +37,37 @@ Este repositório contém minha jornada de aprendizado em **Inteligência Artifi
 
 ```
 curso-ai/
-├── 01-lista-introducao/              # primeiros passos, entrada/saída e variáveis
-├── 02-lista-estruturas-sequenciais/  # operadores matemáticos e fluxo linear
-├── 03-lista-condicionais/            # if/elif/else e tomadas de decisão
-├── 04-lista-repeticoes/              # laços while/for e contadores
-├── 05-lista-vetores/                 # listas, vetores e manipulação de coleções
-├── 06-lista-matrizes/                # matrizes, percursos bidimensionais
-├── 07-lista-funcoes/                 # modularização e funções reutilizáveis
-├── revisao01_n1/                     # revisão para primeira avaliação
-├── revisao02_n1/                     # simulados extras da primeira avaliação
-├── revisao01_n2/                     # revisão estendida para N2
+├── Algoritmos/
+├── Laboratório de Programação em Python/   # exercícios de laboratório em Python
+│   ├── 01-lista-introducao/                # primeiros passos, entrada/saída e variáveis
+│   ├── 02-lista-estruturas-sequenciais/    # operadores matemáticos e fluxo linear
+│   ├── 03-lista-condicionais/              # if/elif/else e tomadas de decisão
+│   ├── 04-lista-repeticoes/                # laços while/for e contadores
+│   ├── 05-lista-vetores/                   # listas, vetores e manipulação de coleções
+│   ├── 06-lista-matrizes/                 # matrizes, percursos bidimensionais
+│   ├── 07-lista-funcoes/                   # modularização e funções reutilizáveis
+│   ├── revisao01_n1/                       # revisão para primeira avaliação
+│   ├── revisao02_n1/                       # simulados extras da primeira avaliação
+│   └── revisao01_n2/                       # revisão estendida para N2
+├── Estrutura de Dados/                     # pilhas, filas, ordenação, tabela hash, etc.
+├── Banco de Dados Não-Relacional/
+├── Big Data e Data Science/                # ex.: Python-Pandas-DataFrames
+├── Computação Paralela/
+├── Sistemas Distribuídos e Computação em Nuvem/
+├── Aprendizagem de Máquina – Supervisionada/
+├── Aprendizagem de Máquina – Não Supervisionada/
+├── Visão Computacional/
+├── Redes Neurais/
+├── Inteligência Artificial Generativa/
+├── Inteligência Artificial/
+├── Processamento de Linguagem Natural/
 ├── LICENSE
 └── README.md
 ```
 
 ---
 
-## 🗺️ Jornada Python Básico
+## 🗺️ Jornada Python Básico (Laboratório de Programação em Python)
 
 1. **Início Curioso (`01-lista-introducao`)**  
    Operações com números, entrada/saída e a primeira visão do interpretador.
@@ -95,7 +109,7 @@ curso-ai/
 
 ## 📚 Conteúdo das Listas
 
-### 🔢 Módulos Principais
+### 🔢 Módulos Principais (em `Laboratório de Programação em Python/`)
 - **`01-lista-introducao`**: exercícios com input/output, tipos numéricos e operadores básicos.  
 - **`02-lista-estruturas-sequenciais`**: problemas sequenciais, cálculo de médias, formatações.  
 - **`03-lista-condicionais`**: tomadas de decisão, validação de faixas, classificação de dados.  
@@ -108,6 +122,11 @@ curso-ai/
 - **`revisao01_n1`**: resumo dos tópicos das listas 01 a 04.  
 - **`revisao02_n1`**: lista extra simulando a prova N1 completa.  
 - **`revisao01_n2`**: revisão acumulada incluindo vetores, matrizes e funções.
+
+### 📂 Outras disciplinas
+- **`Estrutura de Dados`**: pilhas, filas, ordenação (bubble sort, selection sort), busca sequencial, tabela hash.  
+- **`Big Data e Data Science`**: notebooks e práticas com Pandas (DataFrames).  
+- Demais pastas (Algoritmos, Banco de Dados Não-Relacional, Computação Paralela, Sistemas Distribuídos, ML Supervisionada/Não Supervisionada, Visão Computacional, Redes Neurais, IA Generativa, IA, PLN) estão prontas para receber conteúdo.
 
 ---
 
@@ -126,8 +145,8 @@ git clone https://github.com/seu-usuario/curso-ai.git
 # Entre no diretório
 cd curso-ai
 
-# Execute qualquer arquivo Python
-python 04-lista-repeticoes/programa1.py
+# Execute qualquer arquivo Python (ex.: lista de repetições)
+python "Laboratório de Programação em Python/04-lista-repeticoes/programa1.py"
 ```
 
 <div align="center">
