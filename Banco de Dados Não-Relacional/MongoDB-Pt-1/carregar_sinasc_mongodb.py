@@ -2,7 +2,7 @@
 Atividade MongoDB (Pt-1): carregar CSV SINASC no MongoDB, consultar e amostrar com Pandas.
 
 Pré-requisitos:
-  - MongoDB em execução (local: mongodb://localhost:27017).
+  - MongoDB em execução (local: mongodb://localhost:27018).
   - pip install -r requirements.txt
 
 Evidência no Compass: conecte com a mesma URI usada aqui, abra o database SINASC_PT1,
