@@ -7,22 +7,28 @@ Requisitos:
 
 Uso:
   python salvar_recuperar_imagem_redis.py caminho\\para\\foto.png
-  python salvar_recuperar_imagem_redis.py foto.png -o copia.png --chave minha:foto
+  python salvar_recuperar_imagem_redis.py foto.png --url redis://default@172.17.0.3:6379
+  (ou defina REDIS_URL no ambiente; --url tem prioridade sobre host/porta)
 """
 
 from __future__ import annotations
 
 import argparse
 import base64
+import os
 import sys
 from pathlib import Path
 
 import redis
 
 CHAVE_PADRAO = "imagem:salva_base64"
+REDIS_URL_PADRAO = os.environ.get("REDIS_URL")
 
 
-def conectar(host: str, port: int) -> redis.Redis:
+def criar_cliente(url: str | None, host: str, port: int) -> redis.Redis:
+    """Usa URL (redis://...) se informada; senão host e porta."""
+    if url:
+        return redis.from_url(url, decode_responses=True)
     return redis.Redis(host=host, port=port, decode_responses=True)
 
 
@@ -65,21 +71,28 @@ def main() -> int:
         default=CHAVE_PADRAO,
         help=f"Chave Redis (padrão: {CHAVE_PADRAO})",
     )
-    parser.add_argument("--host", default="localhost", help="Host Redis")
-    parser.add_argument("--port", type=int, default=6379, help="Porta Redis")
+    parser.add_argument(
+        "--url",
+        default=None,
+        help="URL Redis (ex.: redis://default@host:6379). Se omitido, usa REDIS_URL ou host/porta.",
+    )
+    parser.add_argument("--host", default="localhost", help="Host Redis (sem --url)")
+    parser.add_argument("--port", type=int, default=6379, help="Porta Redis (sem --url)")
 
     args = parser.parse_args()
+    url_efetiva = args.url or REDIS_URL_PADRAO
     entrada: Path = args.imagem
 
     if not entrada.is_file():
         print(f"Erro: arquivo não encontrado: {entrada}", file=sys.stderr)
         return 1
 
+    destino = url_efetiva if url_efetiva else f"{args.host}:{args.port}"
     try:
-        client = conectar(args.host, args.port)
+        client = criar_cliente(url_efetiva, args.host, args.port)
         client.ping()
-    except redis.ConnectionError as exc:
-        print(f"Erro: não foi possível conectar ao Redis ({args.host}:{args.port}): {exc}", file=sys.stderr)
+    except (redis.ConnectionError, redis.TimeoutError) as exc:
+        print(f"Erro: não foi possível conectar ao Redis ({destino}): {exc}", file=sys.stderr)
         return 1
 
     print("--- Armazenamento ---")
