@@ -274,7 +274,7 @@ def main():
     """Executa operações avançadas"""
     USERNAME = "admin"
     PASSWORD = "admin"
-    CLUSTER_URI = "cluster0.5kdvicj.mongodb.net"
+    CLUSTER_URI = "[CLUSTER_URL]"
     
     ops = AdvancedMongoDBOperations(USERNAME, PASSWORD, CLUSTER_URI)
     
