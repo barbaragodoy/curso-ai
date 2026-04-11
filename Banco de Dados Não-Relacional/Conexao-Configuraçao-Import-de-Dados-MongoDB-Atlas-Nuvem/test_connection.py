@@ -1,6 +1,7 @@
 """
 MongoDB Atlas - Script de Teste Rápido
 Valida a conexão e executa operações básicas
+variáveis precisarão ser atualizadas de acordo com o seu projeto
 """
 
 import pymongo
@@ -17,7 +18,7 @@ def test_connection():
     # Credenciais
     username = "admin"
     password = "admin"
-    cluster_uri = "cluster0.5kdvicj.mongodb.net"
+    cluster_uri = "[CLUSTER_URL]"
     
     # Monta URI
     password_encoded = urllib.parse.quote_plus(password)
