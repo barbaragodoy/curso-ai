@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Referências - ABNT/APA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1em;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .references-list {
+            background: white;
+            border-radius: 5px;
+            padding: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .reference-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            border-radius: 3px;
+        }
+
+        .reference-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .reference-text {
+            color: #333;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .counter {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Gerador de Referências</h1>
+            <p>Formate suas citações em ABNT e APA automaticamente</p>
+        </header>
+
+        <div class="content">
+            <!-- Coluna Esquerda: Formulários -->
+            <div>
+                <div id="alertBox" class="alert"></div>
+
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('book')">📖 Livro</button>
+                    <button class="tab-button" onclick="switchTab('website')">🌐 Website</button>
+                    <button class="tab-button" onclick="switchTab('article')">📄 Artigo</button>
+                </div>
+
+                <!-- Formulário de Livro -->
+                <div id="book" class="tab-content active section">
+                    <h2>Adicionar Livro</h2>
+                    <div class="form-group">
+                        <label>Autor(es) *</label>
+                        <input type="text" id="bookAuthor" placeholder="Ex: Paulo Coelho" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Título *</label>
+                        <input type="text" id="bookTitle" placeholder="Ex: O Alquimista" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ano de Publicação</label>
+                        <input type="number" id="bookYear" placeholder="Ex: 1988" value="2024">
+                    </div>
+                    <div class="form-group">
+                        <label>Editora</label>
+                        <input type="text" id="bookPublisher" placeholder="Ex: HarperOne">
+                    </div>
+                    <div class="form-group">
+                        <label>Edição</label>
+                        <input type="text" id="bookEdition" placeholder="Ex: 1ª" value="1ª">
+                    </div>
+                    <div class="form-group">
+                        <label>Local de Publicação</label>
+                        <input type="text" id="bookPlace" placeholder="Ex: São Paulo" value="São Paulo">
+                    </div>
+                    <button class="btn-primary" onclick="addBook()">Adicionar Livro</button>
+                </div>
+
+                <!-- Formulário de Website -->
+                <div id="website" class="tab-content section">
+                    <h2>Adicionar Website</h2>
+                    <div class="form-group">
+                        <label>URL *</label>
+                        <input type="url" id="websiteUrl" placeholder="Ex: https://www.python.org" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Título da Página</label>
+                        <input type="text" id="websiteTitle" placeholder="Ex: Python Official Website">
+                    </div>
+                    <div class="form-group">
+                        <label>Autor/Responsável</label>
+                        <input type="text" id="websiteAuthor" placeholder="Ex: Python Software Foundation">
+                    </div>
+                    <button class="btn-primary" onclick="addWebsite()">Adicionar Website</button>
+                </div>
+
+                <!-- Formulário de Artigo -->
+                <div id="article" class="tab-content section">
+                    <h2>Adicionar Artigo Científico</h2>
+                    <div class="form-group">
+                        <label>Autor(es) *</label>
+                        <input type="text" id="articleAuthor" placeholder="Ex: Silva, João; Santos, Maria" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Título *</label>
+                        <input type="text" id="articleTitle" placeholder="Ex: Análise de Containerização" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Periódico/Revista *</label>
+                        <input type="text" id="articleJournal" placeholder="Ex: Revista de Tecnologia" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" id="articleYear" placeholder="Ex: 2024" value="2024">
+                    </div>
+                    <div class="form-group">
+                        <label>Volume</label>
+                        <input type="text" id="articleVolume" placeholder="Ex: 5" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Número/Edição</label>
+                        <input type="text" id="articleIssue" placeholder="Ex: 2" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Páginas</label>
+                        <input type="text" id="articlePages" placeholder="Ex: 45-62" value="1-10">
+                    </div>
+                    <div class="form-group">
+                        <label>DOI (Opcional)</label>
+                        <input type="text" id="articleDoi" placeholder="Ex: 10.1234/journal.2024">
+                    </div>
+                    <button class="btn-primary" onclick="addArticle()">Adicionar Artigo</button>
+                </div>
+            </div>
+
+            <!-- Coluna Direita: Referências -->
+            <div>
+                <div class="section">
+                    <h2>Referências Geradas</h2>
+                    
+                    <div class="counter">
+                        <span id="refCount">0</span> referência(s)
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-button active" onclick="switchRefTab('abnt')">ABNT</button>
+                        <button class="tab-button" onclick="switchRefTab('apa')">APA</button>
+                    </div>
+
+                    <div id="abnt" class="tab-content active">
+                        <div id="abntList" class="references-list">
+                            <p style="color: #999; text-align: center;">Nenhuma referência adicionada ainda</p>
+                        </div>
+                    </div>
+
+                    <div id="apa" class="tab-content">
+                        <div id="apaList" class="references-list">
+                            <p style="color: #999; text-align: center;">Nenhuma referência adicionada ainda</p>
+                        </div>
+                    </div>
+
+                    <div class="button-group" style="margin-top: 20px;">
+                        <button class="btn-success" onclick="exportJSON()">📥 Baixar JSON</button>
+                        <button class="btn-success" onclick="exportTXT()">📥 Baixar TXT</button>
+                        <button class="btn-danger" onclick="clearReferences()">🗑️ Limpar Tudo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Gerador Automático de Referências © 2024 | ABNT & APA</p>
+        </footer>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Esconder todos os tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Mostrar tab selecionado
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function switchRefTab(tabName) {
+            document.querySelectorAll('#abnt, #apa').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(el => {
+                if (el.textContent.trim() !== tabName.toUpperCase()) {
+                    el.classList.remove('active');
+                }
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            if (tabName === 'abnt') {
+                event.target.classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-button')[1].classList.add('active');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        async function addBook() {
+            const data = {
+                author: document.getElementById('bookAuthor').value,
+                title: document.getElementById('bookTitle').value,
+                year: document.getElementById('bookYear').value,
+                publisher: document.getElementById('bookPublisher').value,
+                edition: document.getElementById('bookEdition').value,
+                place: document.getElementById('bookPlace').value,
+            };
+
+            if (!data.author || !data.title) {
+                showAlert('Por favor, preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/add-book', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    document.getElementById('bookAuthor').value = '';
+                    document.getElementById('bookTitle').value = '';
+                    loadReferences();
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao adicionar livro', 'error');
+            }
+        }
+
+        async function addWebsite() {
+            const data = {
+                url: document.getElementById('websiteUrl').value,
+                title: document.getElementById('websiteTitle').value,
+                author: document.getElementById('websiteAuthor').value,
+            };
+
+            if (!data.url) {
+                showAlert('Por favor, preencha a URL', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/add-website', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    document.getElementById('websiteUrl').value = '';
+                    document.getElementById('websiteTitle').value = '';
+                    loadReferences();
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao adicionar website', 'error');
+            }
+        }
+
+        async function addArticle() {
+            const data = {
+                author: document.getElementById('articleAuthor').value,
+                title: document.getElementById('articleTitle').value,
+                journal: document.getElementById('articleJournal').value,
+                year: document.getElementById('articleYear').value,
+                volume: document.getElementById('articleVolume').value,
+                issue: document.getElementById('articleIssue').value,
+                pages: document.getElementById('articlePages').value,
+                doi: document.getElementById('articleDoi').value || null,
+            };
+
+            if (!data.author || !data.title || !data.journal) {
+                showAlert('Por favor, preencha os campos obrigatórios', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/add-article', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    document.getElementById('articleAuthor').value = '';
+                    document.getElementById('articleTitle').value = '';
+                    loadReferences();
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao adicionar artigo', 'error');
+            }
+        }
+
+        async function loadReferences() {
+            try {
+                const abntResponse = await fetch('/api/references?format=abnt');
+                const apaResponse = await fetch('/api/references?format=apa');
+                const countResponse = await fetch('/api/count');
+
+                const abntData = await abntResponse.json();
+                const apaData = await apaResponse.json();
+                const countData = await countResponse.json();
+
+                document.getElementById('refCount').textContent = countData.count;
+
+                const abntList = document.getElementById('abntList');
+                const apaList = document.getElementById('apaList');
+
+                if (abntData.references.length === 0) {
+                    abntList.innerHTML = '<p style="color: #999; text-align: center;">Nenhuma referência adicionada ainda</p>';
+                    apaList.innerHTML = '<p style="color: #999; text-align: center;">Nenhuma referência adicionada ainda</p>';
+                } else {
+                    abntList.innerHTML = abntData.references
+                        .map((ref, i) => `<div class="reference-item"><strong>${i + 1}.</strong> <div class="reference-text">${ref}</div></div>`)
+                        .join('');
+                    apaList.innerHTML = apaData.references
+                        .map((ref, i) => `<div class="reference-item"><strong>${i + 1}.</strong> <div class="reference-text">${ref}</div></div>`)
+                        .join('');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar referências:', error);
+            }
+        }
+
+        async function exportJSON() {
+            try {
+                const response = await fetch('/api/export?format=json');
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `referencias_${new Date().getTime()}.json`;
+                a.click();
+            } catch (error) {
+                showAlert('Erro ao exportar JSON', 'error');
+            }
+        }
+
+        async function exportTXT() {
+            try {
+                const response = await fetch('/api/export?format=txt');
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `referencias_${new Date().getTime()}.txt`;
+                a.click();
+            } catch (error) {
+                showAlert('Erro ao exportar TXT', 'error');
+            }
+        }
+
+        async function clearReferences() {
+            if (confirm('Tem certeza que deseja remover todas as referências?')) {
+                try {
+                    const response = await fetch('/api/clear', { method: 'POST' });
+                    const result = await response.json();
+                    if (response.ok) {
+                        showAlert(result.message, 'success');
+                        loadReferences();
+                    }
+                } catch (error) {
+                    showAlert('Erro ao limpar referências', 'error');
+                }
+            }
+        }
+
+        // Carregar referências ao iniciar
+        loadReferences();
+    </script>
+</body>
+</html>
