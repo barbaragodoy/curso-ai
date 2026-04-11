@@ -13,7 +13,7 @@ pip install pymongo pandas
 ### 2. Credenciais MongoDB Atlas
 - **Username:** admin
 - **Password:** admin
-- **Cluster URI:** cluster0.5kdvicj.mongodb.net
+- **Cluster URI:** [CLUSTER_URL]
 - **Database:** imdb
 - **Collection:** movies
 
