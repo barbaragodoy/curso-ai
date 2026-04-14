@@ -241,7 +241,7 @@ def main():
     # Configurações
     USERNAME = "admin"
     PASSWORD = "admin"
-    CLUSTER_URI = "cluster0.5kdvicj.mongodb.net"
+    CLUSTER_URI = "[CLUSTER_URL]"
     DATABASE_NAME = "imdb"
     COLLECTION_NAME = "movies"
     CSV_PATH = "IMDB top 1000.csv"
