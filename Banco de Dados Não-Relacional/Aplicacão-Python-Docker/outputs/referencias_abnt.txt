@@ -1,0 +1,11 @@
+Referências - Formato ABNT
+==================================================
+
+1. MACHADO DE ASSIS. Dom Casmurro. 1ª ed. Rio de Janeiro: Editora Garnier, 1899.
+
+2. PYTHON SOFTWARE FOUNDATION. Python Official Website. Disponível em: https://www.python.org. Acesso em: 11 de April de 2026.
+
+3. SILVA, JOÃO; SANTOS, MARIA. Análise de Containerização em Aplicações Modernas. Revista de Tecnologia, v. 5, n. 2, p. 45-62, 2023. DOI: 10.1234/rt.2023.5.2
+
+4. PAULO COELHO. O Alquimista. 2ª ed. Nova York: HarperOne, 1988.
+

@@ -1,0 +1,11 @@
+Referências - Formato APA
+==================================================
+
+1. Machado de Assis (1899). Dom Casmurro. Rio de Janeiro: Editora Garnier.
+
+2. Python Software Foundation. Python Official Website. Retrieved from https://www.python.org (Accessed: 11 de April de 2026)
+
+3. Silva, João; Santos, Maria (2023). Análise de Containerização em Aplicações Modernas. Revista de Tecnologia, 5(2), 45-62. https://doi.org/10.1234/rt.2023.5.2
+
+4. Paulo Coelho (1988). O Alquimista. Nova York: HarperOne.
+

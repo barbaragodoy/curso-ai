@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidências - PostgreSQL + pgAdmin Docker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border-left: 4px solid #4CAF50;
+            background-color: #f9f9f9;
+        }
+        .info-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            display: block;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .credentials {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .port {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        ul {
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✓ PostgreSQL + pgAdmin em Docker</h1>
+        <p><strong>Data:</strong> 08 de Abril de 2026</p>
+        <p><strong>Ambiente:</strong> Docker Compose com PostgreSQL 16 Alpine e pgAdmin 4</p>
+
+        <div class="section">
+            <h2>1. Status dos Containers</h2>
+            <p>Ambos os containers foram iniciados com sucesso:</p>
+            <code>
+NAME          IMAGE                   COMMAND                  SERVICE    CREATED          STATUS                    PORTS
+pgadmin       dpage/pgadmin4:latest   "/entrypoint.sh"         pgadmin    15 seconds ago   Up 4 seconds              0.0.0.0:5050->80/tcp, [::]:5050->80/tcp
+postgres_db   postgres:16-alpine      "docker-entrypoint.s…"   postgres   15 seconds ago   Up 15 seconds (healthy)   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+            </code>
+            <p class="success">✓ PostgreSQL está HEALTHY</p>
+            <p class="success">✓ pgAdmin está UP</p>
+        </div>
+
+        <div class="credentials">
+            <h2>Credenciais de Acesso</h2>
+            <ul>
+                <li><strong>PostgreSQL:</strong>
+                    <ul>
+                        <li>Usuário: <code>admin</code></li>
+                        <li>Senha: <code>admin123</code></li>
+                        <li>Banco padrão: <code>testdb</code></li>
+                        <li>Host: <code>postgres_db</code> (dentro da rede Docker)</li>
+                        <li>Porta: <code>5432</code></li>
+                    </ul>
+                </li>
+                <li><strong>pgAdmin:</strong>
+                    <ul>
+                        <li>Email: <code>admin@example.com</code></li>
+                        <li>Senha: <code>admin123</code></li>
+                        <li>URL: <code>http://localhost:5050</code></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2. Endereços de Acesso</h2>
+            <ul>
+                <li><strong>pgAdmin Web UI:</strong> <span class="port">http://localhost:5050</span></li>
+                <li><strong>PostgreSQL Database:</strong> <span class="port">localhost:5432</span></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>3. Arquivos Docker Compose</h2>
+            <p><strong>Arquivo:</strong> <code>docker-compose.yml</code></p>
+            <p>Configuração completa com:</p>
+            <ul>
+                <li>PostgreSQL 16-alpine com volume persistente</li>
+                <li>pgAdmin 4 para gerenciamento</li>
+                <li>Rede bridge <code>postgres_network</code> para comunicação</li>
+                <li>Health check configurado para PostgreSQL</li>
+                <li>Dependência do pgAdmin no PostgreSQL</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4. Passos para Acesso</h2>
+            <ol>
+                <li>Abrir navegador e acessar: <strong>http://localhost:5050</strong></li>
+                <li>Fazer login com:
+                    <ul>
+                        <li>Email: <code>admin@example.com</code></li>
+                        <li>Senha: <code>admin123</code></li>
+                    </ul>
+                </li>
+                <li>Adicionar novo servidor PostgreSQL:
+                    <ul>
+                        <li>Host: <code>postgres_db</code></li>
+                        <li>Port: <code>5432</code></li>
+                        <li>Username: <code>admin</code></li>
+                        <li>Password: <code>admin123</code></li>
+                    </ul>
+                </li>
+                <li>Verificar banco de dados <code>testdb</code> listado no painel</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>5. Verificação dos Logs</h2>
+            <p><strong>Status do PostgreSQL (extrato dos logs):</strong></p>
+            <code>
+2026-04-11 00:48:47.922 UTC [1] LOG: starting PostgreSQL 16.13
+2026-04-11 00:48:47.922 UTC [1] LOG: listening on IPv4 address "0.0.0.0", port 5432
+2026-04-11 00:48:47.922 UTC [1] LOG: listening on IPv6 address "::", port 5432
+2026-04-11 00:48:47.934 UTC [1] LOG: listening on Unix socket
+2026-04-11 00:48:47.946 UTC [57] LOG: database system was shut down
+2026-04-11 00:48:47.957 UTC [1] LOG: database system is ready to accept connections
+            </code>
+            <p class="success">✓ Banco de dados pronto para aceitar conexões</p>
+        </div>
+
+        <div class="section">
+            <h2>6. Comandos Úteis</h2>
+            <code>
+# Ver status dos containers
+docker compose ps
+
+# Ver logs do PostgreSQL
+docker compose logs postgres
+
+# Ver logs do pgAdmin
+docker compose logs pgadmin
+
+# Acessar terminal do PostgreSQL
+docker exec -it postgres_db psql -U admin -d testdb
+
+# Parar o ambiente
+docker compose down
+
+# Remover volumes (dados)
+docker compose down -v
+            </code>
+        </div>
+
+        <div class="section">
+            <h2>7. Resumo da Entrega</h2>
+            <ul>
+                <li class="success">✓ Docker Compose configurado com PostgreSQL 16 Alpine</li>
+                <li class="success">✓ pgAdmin 4 instalado e rodando na porta 5050</li>
+                <li class="success">✓ Ambos os containers em estado HEALTHY/UP</li>
+                <li class="success">✓ Rede bridge configurada para comunicação entre serviços</li>
+                <li class="success">✓ Volume persistente para dados do PostgreSQL</li>
+                <li class="success">✓ Health check funcionando</li>
+                <li class="success">✓ Credenciais configuradas e documentadas</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>Próximos Passos</h3>
+            <ol>
+                <li>Acesse <strong>http://localhost:5050</strong> no navegador</li>
+                <li>Faça login com as credenciais listadas acima</li>
+                <li>Crie uma conexão com o servidor PostgreSQL</li>
+                <li>Navegue pelos bancos de dados e tabelas</li>
+                <li>Execute consultas SQL de teste no Query Tool</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

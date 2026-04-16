@@ -1,0 +1,19 @@
+
+
+services:
+  reference-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reference-generator-app
+    image: reference-generator:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./templates:/app/templates
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+    command: python app.py
