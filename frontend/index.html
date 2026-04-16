@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ETL Pipeline</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">⚙️ ETL Pipeline</div>
+    <div class="subtitle">Pipeline ETL · MongoDB + PostgreSQL</div>
+  </div>
+  <nav>
+    <button class="active" data-tab="tab-bd">🎭 BD Produção</button>
+    <button data-tab="tab-upload">📁 CSV</button>
+    <button data-tab="tab-url">🌐 URL</button>
+    <button data-tab="tab-analytics">📊 Analytics</button>
+  </nav>
+  <div id="health-badges" style="margin-left:1rem;display:flex;gap:0.5rem;font-size:0.72rem;flex-shrink:0"></div>
+</header>
+
+<main>
+
+  <!-- ══════════════════════════════════════
+       ABA PRINCIPAL — Pipeline JSONL
+  ══════════════════════════════════════ -->
+  <div id="tab-bd" class="tab-content active">
+
+    <div class="card">
+      <div class="card-title">🎭 Pipeline Principal (3 arquivos JSONL)</div>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem">
+        Faça o download dos 3 arquivos JSONL disponibilizados pelo professor
+        e envie abaixo. A pipeline executa todas as 7 etapas automaticamente.
+      </p>
+
+      <div class="jsonl-grid">
+        <div class="jsonl-slot" id="slot-producao" data-label="produção.jsonl">
+          <div class="slot-icon">📄</div>
+          <div class="slot-name">produção.jsonl</div>
+          <div class="slot-desc">Dados das produções</div>
+          <input type="file" id="file-producao" accept=".jsonl,.json" class="hidden" />
+          <div class="slot-filename"></div>
+        </div>
+        <div class="jsonl-slot" id="slot-pessoa" data-label="pessoa.jsonl">
+          <div class="slot-icon">👤</div>
+          <div class="slot-name">pessoa.jsonl</div>
+          <div class="slot-desc">Cadastro de pessoas</div>
+          <input type="file" id="file-pessoa" accept=".jsonl,.json" class="hidden" />
+          <div class="slot-filename"></div>
+        </div>
+        <div class="jsonl-slot" id="slot-equipe" data-label="equipe.jsonl">
+          <div class="slot-icon">👥</div>
+          <div class="slot-name">equipe.jsonl</div>
+          <div class="slot-desc">Participações por produção</div>
+          <input type="file" id="file-equipe" accept=".jsonl,.json" class="hidden" />
+          <div class="slot-filename"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.25rem;display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-primary" id="btn-run-bd" disabled>▶ Executar Pipeline Completa</button>
+        <span style="font-size:0.8rem;color:var(--text-muted)">RAW → Qualidade → Clean → Enriquecimento → PostgreSQL</span>
+      </div>
+
+      <div id="progress-bd" class="progress-container hidden">
+        <div class="progress-label"></div>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- Resultado por etapa -->
+    <div id="bd-results" class="hidden">
+
+      <div class="card">
+        <div class="card-title">📋 Relatório de Qualidade</div>
+        <div id="bd-quality-grid" class="quality-compare-grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🗄️ Collections Criadas no MongoDB</div>
+        <div id="bd-collections-grid" class="collections-grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔗 Enriquecimento — producoes_com_participantes</div>
+        <div id="bd-enrichment"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🐘 PostgreSQL — Carga para Comparação</div>
+        <div id="bd-postgres"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       ABA — UPLOAD CSV
+  ══════════════════════════════════════ -->
+  <div id="tab-upload" class="tab-content">
+    <div class="card">
+      <div class="card-title">📁 Upload de Arquivo CSV</div>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">
+        Cada arquivo gera uma <strong>collection própria</strong> no MongoDB com o nome do arquivo.
+      </p>
+      <div id="drop-zone" class="drop-zone">
+        <div class="icon">📂</div>
+        <p>Arraste e solte seu <strong>.csv</strong> aqui ou clique para selecionar</p>
+        <p class="filename"></p>
+      </div>
+      <input type="file" id="file-input" accept=".csv" class="hidden" />
+      <div style="margin-top:1rem;display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-primary" id="btn-run-csv" disabled>▶ Executar Pipeline</button>
+      </div>
+      <div id="progress-csv" class="progress-container hidden">
+        <div class="progress-label"></div>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+      </div>
+    </div>
+    <div class="card" id="quality-csv-card" style="display:none">
+      <div class="card-title">🔍 Relatório de Qualidade</div>
+      <div id="quality-csv"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📦 Resultado</div>
+      <div id="result-csv" class="result-box hidden"></div>
+      <p id="result-csv-placeholder" style="color:var(--text-muted);font-size:0.875rem">Execute a pipeline para ver os resultados.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       ABA — URL
+  ══════════════════════════════════════ -->
+  <div id="tab-url" class="tab-content">
+    <div class="card">
+      <div class="card-title">🌐 Importar por URL Pública</div>
+      <input type="url" id="url-input" placeholder="https://raw.githubusercontent.com/user/repo/main/data.csv" />
+      <div class="url-examples">
+        <span class="url-example-chip" data-url="https://raw.githubusercontent.com/datasets/gdp/main/data/gdp.csv">GDP CSV</span>
+        <span class="url-example-chip" data-url="https://servicodados.ibge.gov.br/api/v1/localidades/estados">IBGE Estados</span>
+      </div>
+      <div style="margin-top:1rem;display:flex;gap:0.75rem">
+        <button class="btn btn-primary" id="btn-run-url">⬇ Importar e Executar</button>
+      </div>
+      <div id="progress-url" class="progress-container hidden">
+        <div class="progress-label"></div>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+      </div>
+    </div>
+    <div class="card" id="quality-url-card" style="display:none">
+      <div class="card-title">🔍 Relatório de Qualidade</div>
+      <div id="quality-url"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📦 Resultado</div>
+      <div id="result-url" class="result-box hidden"></div>
+      <p id="result-url-placeholder" style="color:var(--text-muted);font-size:0.875rem">Importe dados para ver os resultados.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       ABA — ANALYTICS
+  ══════════════════════════════════════ -->
+  <div id="tab-analytics" class="tab-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem">
+      <h2 style="font-size:1.1rem;font-weight:600">Analytics Dashboard</h2>
+      <button class="btn btn-secondary" id="btn-refresh">🔄 Atualizar</button>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-val" id="metric-total">—</div><div class="metric-lbl">Produções</div></div>
+      <div class="metric-card"><div class="metric-val" id="metric-pessoas">—</div><div class="metric-lbl">Participantes únicos</div></div>
+      <div class="metric-card"><div class="metric-val" id="metric-papeis">—</div><div class="metric-lbl">Papéis distintos</div></div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="card-title">📅 Produções por Ano</div>
+        <canvas id="chart-year"></canvas>
+        <p id="chart-year-empty" class="chart-empty hidden">Sem dados de ano.</p>
+      </div>
+      <div class="chart-card">
+        <div class="card-title">🏷️ Por Tipo de Produção</div>
+        <canvas id="chart-type"></canvas>
+        <p id="chart-type-empty" class="chart-empty hidden">Sem dados de tipo.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏆 Ranking — Top Participantes</div>
+      <table id="table-ranking">
+        <thead><tr><th>#</th><th>Nome</th><th>Participações</th><th>Papéis</th></tr></thead>
+        <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">Aguardando dados...</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🐘 Comparação MongoDB vs PostgreSQL</div>
+      <button class="btn btn-secondary" id="btn-comparacao" style="margin-bottom:1rem">Executar Comparação</button>
+      <div id="comparacao-result" style="font-size:0.85rem;color:var(--text-muted)">
+        Execute a pipeline BD primeiro e depois clique em "Executar Comparação".
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast-container"></div>
+<script src="app.js"></script>
+</body>
+</html>
