@@ -63,6 +63,20 @@ docker --version
 docker compose version
 ```
 
+### Dependências Python
+
+Todas as dependências estão em `backend/requirements.txt` e são instaladas automaticamente pelo Docker:
+
+- `fastapi` — framework web
+- `uvicorn` — servidor ASGI
+- `pandas` — manipulação de dados
+- `pymongo` — driver MongoDB
+- `psycopg2-binary` — driver PostgreSQL
+- `httpx` — cliente HTTP
+- `python-dotenv` — carregamento de variáveis de ambiente
+
+Para instalar localmente sem Docker: `pip install -r backend/requirements.txt`
+
 ---
 
 ## Como Rodar
@@ -149,51 +163,256 @@ URLs suportadas: CSV direto, Google Sheets, JSON público.
 
 ## Endpoints da API
 
+### Health & Infraestrutura
+
+| Método | Rota | Descrição | Resposta |
+|---|---|---|---|
+| `GET` | `/health` | Status da API, MongoDB e PostgreSQL | `{"status": "ok", "api": "online", "mongodb": "connected", "postgresql": "connected"}` |
+
+### Pipeline
+
+| Método | Rota | Descrição | Parâmetros |
+|---|---|---|---|
+| `POST` | `/pipeline/bd-producao-artistica` | Executa a pipeline ETL completa com os 3 JSONL | Recebe 3 arquivos: `producao`, `pessoa`, `equipe` |
+| `POST` | `/pipeline/upload` | Upload de CSV e execução da pipeline | Arquivo CSV no body; opcional: `collection_name` |
+| `POST` | `/pipeline/url` | Importação por URL pública e execução | `url` (string), `collection_name` (opcional) |
+
+### Analytics — Consultas Simples
+
+| Método | Rota | Descrição | O que retorna |
+|---|---|---|---|
+| `GET` | `/analytics/summary` | Total de registros e última ingestão | Total de documentos e timestamp UTC da última atualização |
+| `GET` | `/analytics/quality-report` | Último relatório de qualidade gerado | Estatísticas pré-transformação: nulos, duplicatas, outliers, completude |
+| `GET` | `/analytics/datasets` | Lista todos os datasets ingeridos | Array de datasets com `collection_name`, `record_count`, `source`, `timestamp` |
+
+### Analytics — Agregações e Rankings (3 JSONL)
+
+| Método | Rota | Descrição | Exemplo de Resultado |
+|---|---|---|---|
+| `GET` | `/analytics/bd/producoes-por-ano` | Distribuição de produções por ano (agregação) | `[{"_id": 2020, "count": 45}, {"_id": 2021, "count": 67}, ...]` |
+| `GET` | `/analytics/bd/producoes-por-tipo` | Distribuição por tipo de produção (agregação) | `[{"tipo": "Teatro", "count": 120}, {"tipo": "Cinema", "count": 85}, ...]` |
+| `GET` | `/analytics/bd/ranking-pessoas` | Top 20 pessoas com mais participações (ranking) | `[{"pessoa_id": "123", "nome": "João Silva", "participacoes": 15}, ...]` |
+| `GET` | `/analytics/bd/papeis-mais-frequentes` | Papéis mais frequentes na equipe (agregação) | `[{"papel": "Diretor", "frequencia": 234}, {"papel": "Ator", "frequencia": 512}, ...]` |
+
+### Analytics — Comparação MongoDB vs PostgreSQL
+
 | Método | Rota | Descrição |
 |---|---|---|
-| `GET` | `/health` | Status da API, MongoDB e PostgreSQL |
-| `POST` | `/pipeline/bd-producao-artistica` | Pipeline completa com os 3 JSONL |
-| `POST` | `/pipeline/upload` | Upload de CSV e execução da pipeline |
-| `POST` | `/pipeline/url` | Importação por URL e execução da pipeline |
-| `GET` | `/analytics/summary` | Total de registros e última ingestão |
-| `GET` | `/analytics/bd/producoes-por-ano` | Distribuição de produções por ano |
-| `GET` | `/analytics/bd/producoes-por-tipo` | Distribuição por tipo de produção |
-| `GET` | `/analytics/bd/ranking-pessoas` | Top 20 pessoas com mais participações |
-| `GET` | `/analytics/bd/papeis-mais-frequentes` | Papéis mais frequentes na equipe |
-| `GET` | `/analytics/comparacao-sql` | Comparação MongoDB vs PostgreSQL |
-| `GET` | `/analytics/quality-report` | Último relatório de qualidade |
+| `GET` | `/analytics/comparacao-sql` | Comparação de contagens entre MongoDB e PostgreSQL (valida integridade dos dados espelhados) |
 
-Documentação interativa completa: http://localhost:8000/docs
+**Documentação interativa completa**: http://localhost:8000/docs
 
 ---
 
 ## Collections MongoDB Criadas
 
-| Collection | Camada | Descrição |
-|---|---|---|
-| `raw_producao` | RAW | Dados brutos de produção (sem tratamento) |
-| `raw_pessoa` | RAW | Dados brutos de pessoas |
-| `raw_equipe` | RAW | Dados brutos de equipe |
-| `producao_clean` | CLEAN | Produções tratadas (upsert por hash) |
-| `pessoa_clean` | CLEAN | Pessoas tratadas |
-| `equipe_clean` | CLEAN | Equipe tratada |
-| `producoes_com_participantes` | RICH | Produções com participantes aninhados (principal) |
-| `quality_reports` | META | Relatórios de qualidade gerados pela pipeline |
-| `datasets_index` | META | Índice de datasets ingeridos |
+| Collection | Camada | Descrição | Uso |
+|---|---|---|---|
+| `raw_producao` | RAW | Dados brutos de produção (sem tratamento) | Auditoria; comparação com dados transformados |
+| `raw_pessoa` | RAW | Dados brutos de pessoas | Auditoria; comparação com dados transformados |
+| `raw_equipe` | RAW | Dados brutos de equipe | Auditoria; comparação com dados transformados |
+| `producao_clean` | CLEAN | Produções tratadas (upsert por hash) | Base para enriquecimento |
+| `pessoa_clean` | CLEAN | Pessoas tratadas | Base para enriquecimento |
+| `equipe_clean` | CLEAN | Equipe tratada | Base para enriquecimento |
+| `producoes_com_participantes` | RICH | Produções com participantes aninhados (principal) | **Coleção de consumo para analytics e frontend** |
+| `quality_reports` | META | Relatórios de qualidade gerados pela pipeline | Histórico de qualidade dos dados; endpoint `/analytics/quality-report` |
+| `datasets_index` | META | Índice de datasets ingeridos | Rastreamento de uploads e URLs importadas |
+
+> **Dica**: Use `producoes_com_participantes` para todas as queries analíticas — é a coleção final enriquecida com dados completos.
 
 ---
 
 ## Campos ETL Adicionados
 
-Cada registro nas coleções CLEAN recebe automaticamente:
+Cada registro nas coleções CLEAN e RICH recebe automaticamente:
 
-| Campo | Descrição |
-|---|---|
-| `_etl_source` | Origem: `"csv"`, `"url"` ou `"jsonl"` |
-| `_etl_timestamp` | Data/hora da ingestão (ISO 8601 UTC) |
-| `_etl_filename` | Nome do arquivo ou URL de origem |
-| `_hash` | Hash SHA-256 do registro (chave de deduplicação) |
-| `_created_at` | Data/hora da primeira inserção no MongoDB |
+| Campo | Descrição | Exemplo |
+|---|---|---|
+| `_etl_source` | Origem: `"csv"`, `"url"` ou `"jsonl"` | `"jsonl"` |
+| `_etl_timestamp` | Data/hora da ingestão (ISO 8601 UTC) | `"2024-04-22T14:32:15Z"` |
+| `_etl_filename` | Nome do arquivo ou URL de origem | `"producao.jsonl"` ou `"https://exemplo.com/dados.csv"` |
+| `_hash` | Hash SHA-256 do registro (chave de deduplicação) | `"a3f5e8c2d1b4..."` |
+| `_created_at` | Data/hora da primeira inserção no MongoDB | `"2024-04-22T14:32:15Z"` |
+
+---
+
+## Entendendo o Quality Report
+
+O **Quality Report** é gerado na etapa 2 da pipeline e oferece visibilidade dos dados **antes** de qualquer transformação:
+
+- **Nulos (Missing)**: Campos com valores ausentes
+- **Duplicatas**: Registros completamente duplicados
+- **Outliers**: Valores numéricos muito desviados da média (Interquartile Range)
+- **Completude**: Percentual de campos preenchidos por coluna
+- **Estatísticas Descritivas**: Min, max, média, mediana para campos numéricos
+
+Acesse via: **GET `/analytics/quality-report`** ou use o frontend (aba **Pipeline BD** → relatório após executar).
+
+> **Uso**: Identifique problemas nos dados brutos para ajustar as transformações se necessário.
+
+---
+
+## Documentação Complementar
+
+O projeto inclui 3 documentos técnicos em `docs/`:
+
+- **[comparacao_sql.md](docs/comparacao_sql.md)** — Análise MongoDB vs PostgreSQL (Etapa 6): schemas, queries, vantagens de cada modelo
+- **[decisoes_tecnicas.md](docs/decisoes_tecnicas.md)** — Justificativas de arquitetura, escolhas de tecnologias, design patterns
+- **[problemas_encontrados.md](docs/problemas_encontrados.md)** — Problemas identificados no BD_Producao_Artistica (data quality, inconsistências)
+
+Consulte esses arquivos para entender decisões de design e limitações conhecidas.
+
+---
+
+## Logs e Debugging
+
+### Ver Logs do Backend (FastAPI)
+
+```bash
+# Logs em tempo real
+docker compose logs -f backend
+
+# Últimas 100 linhas
+docker compose logs backend --tail 100
+
+# Apenas erros
+docker compose logs backend | grep -i error
+```
+
+### Ver Logs do MongoDB
+
+```bash
+docker compose logs -f mongo
+```
+
+### Ver Logs do PostgreSQL
+
+```bash
+docker compose logs -f postgres
+```
+
+### Console do Frontend
+
+1. Acesse http://localhost:3000
+2. Abra DevTools: **F12** ou **Ctrl+Shift+I**
+3. Clique na aba **Console** para ver erros de JavaScript
+
+### Acessar MongoDB via Shell
+
+```bash
+# Conectar ao container
+docker exec -it etl_mongo mongosh --authenticationDatabase admin etl_db
+
+# Listar coleções
+show collections
+
+# Ver qualidade mais recente
+db.quality_reports.findOne(sort: {_etl_timestamp: -1})
+```
+
+### Acessar PostgreSQL via Shell
+
+```bash
+# Conectar ao container
+docker exec -it etl_postgres psql -U etl_user -d etl_db
+
+# Listar tabelas
+\dt
+
+# Contar registros
+SELECT COUNT(*) FROM producao_clean;
+```
+
+---
+
+## Troubleshooting
+
+### Container não inicia
+
+**Sintoma**: `docker compose up` falha com erro de porta ocupada ou build failure
+
+**Solução**:
+```bash
+# Limpar completamente
+docker compose down -v
+docker system prune -a
+
+# Rebuildar do zero
+docker compose up --build
+```
+
+### MongoDB não conecta
+
+**Sintoma**: `"mongodb": "unreachable"` no `/health`
+
+**Verificar**:
+```bash
+# Ver se o container está rodando
+docker ps | grep mongo
+
+# Checar logs
+docker compose logs mongo
+
+# Verificar conectividade
+docker exec etl_backend curl -s http://mongo:27017 2>&1 || echo "Conexão falhou"
+```
+
+### PostgreSQL não conecta
+
+**Sintoma**: `"postgresql": "unreachable"` no `/health`
+
+**Verificar**:
+```bash
+docker ps | grep postgres
+docker compose logs postgres
+```
+
+### Pipeline falha com "collection already exists"
+
+**Sintoma**: Executar pipeline 2x resulta em erro
+
+**Solução**: MongoDB não permite recriar coleções. Isso é esperado — a segunda execução faz upsert (atualiza registros existentes via hash). Se quiser resetar:
+```bash
+docker compose down -v
+```
+
+### Frontend não carrega, botão não responde
+
+**Sintoma**: http://localhost:3000 carrega mas botões não funcionam
+
+**Solução**:
+1. Abra em modo anônimo do navegador (ad blockers podem bloquear requests)
+2. Verifique DevTools (F12) → Console para erros JavaScript
+3. Verifique se backend está respondendo: http://localhost:8000/health
+
+### Dados aparecem em MongoDB mas não no Analytics
+
+**Sintoma**: Collections criadas mas endpoints retornam vazio
+
+**Verificar**:
+- A pipeline foi executada até o fim (verifique `producoes_com_participantes`)?
+- Há dados em `raw_*` mas não em `*_clean`? Pode ser erro na transformação — veja logs
+- Dados em `*_clean` mas não em `producoes_com_participantes`? Erro no enrichment
+
+```bash
+# Verificar cada layer
+docker exec etl_backend python -c "
+from app.database.mongo import get_db
+db = get_db()
+print('RAW:', db.raw_producao.count_documents({}))
+print('CLEAN:', db.producao_clean.count_documents({}))
+print('RICH:', db.producoes_com_participantes.count_documents({}))
+"
+```
+
+### OutOfMemory ou pipeline muito lenta
+
+**Causa**: Datasets muito grandes ou transformações ineficientes
+
+**Solução**:
+- Processar em lotes menores
+- Aumentar memória do Docker: `Settings → Resources → Memory`
+- Consultar [decisoes_tecnicas.md](docs/decisoes_tecnicas.md) para ajustes recomendados
 
 ---
 

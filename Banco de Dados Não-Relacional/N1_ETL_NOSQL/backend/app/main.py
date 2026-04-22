@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.encoders import ENCODERS_BY_TYPE
+from bson import ObjectId
 
 from app.routes import upload, url_import, analytics, bd_pipeline
 from app.database.mongo import ping_db
 from app.database.postgres import ping_postgres
+
+# Permite que FastAPI serialize ObjectId do MongoDB como string
+ENCODERS_BY_TYPE[ObjectId] = str
 
 app = FastAPI(
     title="ETL Pipeline",

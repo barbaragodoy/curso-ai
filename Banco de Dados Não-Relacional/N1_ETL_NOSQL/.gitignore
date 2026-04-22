@@ -25,9 +25,6 @@ uploads/
 .idea/
 *.swp
 
-# Claude Code
-.claude/
-
 # Docker
 .docker/
 
